@@ -1,0 +1,65 @@
+upstream pollerapp.fake {
+    server 127.0.0.1;
+}
+
+upstream syncspp.fake {
+    server 127.0.0.1;
+}
+
+upstream pollerapp_stream {
+    server unix:/run/php/php7.3-fpm.sock;
+}
+
+upstream syncspp_stream {
+    server unix:/run/php/php7.3-fpm.sock;
+}
+
+
+server {
+    #server_name mydomain;
+
+    root /var/www/html;
+    #index index.html;
+
+    location /poller {
+        proxy_pass http://pollerapp.fake;
+    }
+
+    location /socketsync/public {
+        proxy_pass http://syncspp.fake;
+    }
+}
+
+server {
+    server_name pollerapp.fake;
+    root /var/www/html/poller/public;
+
+    location / {
+        try_files $uri /index.php$is_args$args;
+    }
+        location  ~ ^/index\.php(/|$) {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass pollerapp_stream;
+                fastcgi_split_path_info ^(.+\.php)(/.*)$;
+                include fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+                fastcgi_param DOCUMENT_ROOT $realpath_root;
+        }
+}
+
+server {
+    server_name syncspp.fake;
+    root /var/www/html/socketsync/public;
+
+    location / {
+        try_files $uri /index.php$is_args$args;
+    }
+        location ~ ^/index\.php(/|$) {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass syncspp_stream;
+                fastcgi_split_path_info ^(.+\.php)(/.*)$;
+                include fastcgi_params;
+                fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+                fastcgi_param DOCUMENT_ROOT $realpath_root;
+        }
+}

@@ -1,8 +1,7 @@
 controllers:
     resource: ../../src/Controller/
     type: annotation
-    prefix: poller
-
+    prefix: socketsync
 kernel:
     resource: ../../src/Kernel.php
     type: annotation

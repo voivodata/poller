@@ -19,9 +19,9 @@ class PollerController extends AbstractController
     }
 
     /**
-     * @Route("/poller", name="poll", methods={"GET"})
+     * @Route("/pollstart", name="pollstart", methods={"GET"})
      */
-    public function poll(): Response
+    public function pollstart(): Response
     {
         dd($this->pollerService->startPoll());
         return $this->json([
