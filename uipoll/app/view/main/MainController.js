@@ -7,13 +7,18 @@ Ext.define('uipoll.view.main.MainController', {
 
     alias: 'controller.main',
 
-    onItemSelected: function (sender, record) {
-        Ext.Msg.confirm('Confirm', 'Are you sure?', 'onConfirm', this);
-    },
 
-    onConfirm: function (choice) {
-        if (choice === 'yes') {
-            //
-        }
+    pollAjax(button) {
+        var url = window.location.origin+'/poller/leaderboard/'+button.configUrl;
+        Ext.Ajax.request({
+            url,
+            method: 'GET',
+            scope: this,
+            success(res) {
+                res = Ext.decode(res.responseText);
+                Ext.toast(res.success);
+            },
+        });
     }
+
 });

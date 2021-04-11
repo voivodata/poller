@@ -37,7 +37,11 @@ class PollerService
     }
 
     public function reset() {
-        return $this->redis->delete('leaderboard');
+        if ($this->redis->delete('leaderboard')) {
+            return 'reset';
+        } else {
+            return 'already reset';
+        }
     }
 
     public function fillRandomScore()

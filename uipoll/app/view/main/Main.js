@@ -19,10 +19,22 @@ Ext.define('uipoll.view.main.Main', {
 
     items:[{
         xtype: 'panel',
+        layout: 'hbox',
         items:[{
-            xtype: 'button'
+            xtype: 'button',
+            text: 'start',
+            configUrl: 'start',
+            handler: 'pollAjax'
         },{
-            xtype: 'button'
+            xtype: 'button',
+            text: 'stop',
+            configUrl:'stop',
+            handler: 'pollAjax'
+        },{
+            xtype: 'button',
+            text: 'reset redis',
+            configUrl:'reset',
+            handler: 'pollAjax'
         }]
     },{
         xtype: 'panel'

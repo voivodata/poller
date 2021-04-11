@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Services\PollerService;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PollerController extends AbstractController
@@ -21,24 +20,27 @@ class PollerController extends AbstractController
     /**
      * @Route("/leaderboard/start", name="pollstart", methods={"GET"})
      */
-    public function pollstart(): Response
+    public function pollstart()
     {
-        return new Response($this->pollerService->pollStart());
+        $response = $this->pollerService->pollStart();
+        return $this->json(['success' => $response]);
     }
 
     /**
      * @Route("/leaderboard/stop", name="pollend", methods={"GET"})
      */
-    public function pollend(): Response
+    public function pollend()
     {
-        return  new Response($this->pollerService->pollEnd());
+        $response = $this->pollerService->pollEnd();
+        return $this->json(['success' => $response]);
     }
 
     /**
      * @Route("/leaderboard/reset", name="reset", methods={"GET"})
      */
-    public function reset(): Response
+    public function reset()
     {
-        return  new Response($this->pollerService->reset());
+        $response = $this->pollerService->reset();
+        return $this->json(['success' => $response]);
     }
 }
