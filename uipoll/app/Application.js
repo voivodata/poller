@@ -8,12 +8,6 @@ Ext.define('uipoll.Application', {
 
     name: 'uipoll',
 
-    quickTips: false,
-    platformConfig: {
-        desktop: {
-            quickTips: true
-        }
-    },
 
     onAppUpdate: function () {
         Ext.Msg.confirm('Application Update', 'This application has an update, reload?',
