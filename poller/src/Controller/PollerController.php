@@ -19,14 +19,26 @@ class PollerController extends AbstractController
     }
 
     /**
-     * @Route("/pollstart", name="pollstart", methods={"GET"})
+     * @Route("/leaderboard/start", name="pollstart", methods={"GET"})
      */
     public function pollstart(): Response
     {
-        dd($this->pollerService->startPoll());
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PollerController.php',
-        ]);
+        return new Response($this->pollerService->pollStart());
+    }
+
+    /**
+     * @Route("/leaderboard/stop", name="pollend", methods={"GET"})
+     */
+    public function pollend(): Response
+    {
+        return  new Response($this->pollerService->pollEnd());
+    }
+
+    /**
+     * @Route("/leaderboard/reset", name="reset", methods={"GET"})
+     */
+    public function reset(): Response
+    {
+        return  new Response($this->pollerService->reset());
     }
 }
