@@ -17,5 +17,12 @@ Ext.define('uipoll.Application', {
                 }
             }
         );
+    },
+    init() {
+        var conurl  = 'ws://'+window.location.host+':8080';
+        this.appSock = new WebSocket(conurl);
+        this.appSock.onopen = function(e) {
+            console.log("Connection established!");
+        };
     }
 });

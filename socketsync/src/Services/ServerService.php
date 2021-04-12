@@ -1,6 +1,5 @@
 <?php
 namespace App\Services;
-// use Psr\Container\ContainerInterface;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
@@ -15,7 +14,7 @@ class ServerService implements MessageComponentInterface
     ) {
         $this->clients = new \SplObjectStorage;
         $this->connectRedis($container);
-        $this->onRedisChange();
+        // $this->readRedis();
     }
 
     private function connectRedis($container) {
@@ -30,14 +29,17 @@ class ServerService implements MessageComponentInterface
     }
 
 
-    private function onRedisChange() {
-
-        //read readis
+    public function readRedis() {
+        $rawData = $this->redis->zRangeByScore('leaderboard', '-inf', '+inf', ['withscores' => TRUE]);
+        foreach ($rawData as $key => &$player) {
+            $player = [
+                'name' => $key,
+                'score' => $player
+            ];
+        }
+        $rawData = array_values($rawData);
         foreach ($this->clients as $client) {
-            if ($from !== $client) {
-                // The sender is not the receiver, send to each client connected
-                $client->send($msg);
-            }
+            $client->send(json_encode($rawData));
         }
     }
 
@@ -47,18 +49,8 @@ class ServerService implements MessageComponentInterface
         echo "New connection! ({$conn->resourceId})\n";
     }
 
-    // public function onMessage(ConnectionInterface $from, $msg) {
-    //     $numRecv = count($this->clients) - 1;
-    //     echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
-    //         , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
-
-    //     foreach ($this->clients as $client) {
-    //         if ($from !== $client) {
-    //             // The sender is not the receiver, send to each client connected
-    //             $client->send($msg);
-    //         }
-    //     }
-    // }
+   
+    public function onMessage(ConnectionInterface $from, $msg) {}
 
     public function onClose(ConnectionInterface $conn) {
          $this->clients->detach($conn);

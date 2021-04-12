@@ -37,6 +37,31 @@ Ext.define('uipoll.view.main.Main', {
             handler: 'pollAjax'
         }]
     },{
-        xtype: 'panel'
-    }]
+        xtype: 'panel',
+        width: 500,
+        height: 500,
+        name: 'leaderBoardPanel',
+        tpl: new Ext.XTemplate(
+            '<table id="leaderboard">',
+                '<tr>',
+                '<th>Rank</th>',
+                '<th>Name</th>',
+                '<th>Score</th>',
+                '</tr>',
+                '<tpl foreach=".">',
+                    '<tr>',
+                    '<td>{xindex}</th>',
+                    '<td>{name}</th>',
+                    '<td>{score}</th>',
+                    '</tr>',
+                '</tpl>',
+            '</tr>'
+          ),
+    }],
+    initComponent() {
+        Ext.getApplication().appSock.onmessage = function(e) {
+            this.down('[name="leaderBoardPanel"]').setData(Ext.JSON.decode(e.data));
+        }.bind(this);
+        this.callParent();
+    }
 });

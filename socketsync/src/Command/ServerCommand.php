@@ -7,6 +7,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use App\Services\ServerService;
 use Symfony\Component\Console\Command\LockableTrait;
 use Ratchet\Server\IoServer;
+use Ratchet\Http\HttpServer;
+use Ratchet\WebSocket\WsServer;
+
 use Psr\Container\ContainerInterface;
 
 class ServerCommand extends Command
@@ -27,12 +30,19 @@ class ServerCommand extends Command
             $output->writeln('The command is already running in another process.');
             return Command::FAILURE;
         }
-        
+        $serverService = new ServerService($this->container);
         $server = IoServer::factory(
-            new ServerService($this->container),
+            new HttpServer(
+                new WsServer(
+                    $serverService
+                )
+            ),
             8080
         );
-    
+        
+        $server->loop->addPeriodicTimer(0.1, function () use ($serverService) {
+            $serverService->readRedis();
+        });
         $server->run();
 
         $this->release();
