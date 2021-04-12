@@ -24,5 +24,8 @@ Ext.define('uipoll.Application', {
         this.appSock.onopen = function(e) {
             console.log("Connection established!");
         };
+        this.appSock.addEventListener('error', function (err) {
+            Ext.toast('WS Connection failed');
+        });
     }
 });
