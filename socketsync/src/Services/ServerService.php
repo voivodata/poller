@@ -14,7 +14,6 @@ class ServerService implements MessageComponentInterface
     ) {
         $this->clients = new \SplObjectStorage;
         $this->connectRedis($container);
-        // $this->readRedis();
     }
 
     private function connectRedis($container) {
@@ -31,10 +30,13 @@ class ServerService implements MessageComponentInterface
 
     public function readRedis() {
         $rawData = $this->redis->zRangeByScore('leaderboard', '-inf', '+inf', ['withscores' => TRUE]);
+        $rank = 0;
         foreach ($rawData as $key => &$player) {
+            $rank++;
             $player = [
                 'name' => $key,
-                'score' => $player
+                'score' => $player,
+                'rank' => $rank
             ];
         }
         $rawData = array_values($rawData);

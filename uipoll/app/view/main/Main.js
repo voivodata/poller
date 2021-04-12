@@ -39,7 +39,7 @@ Ext.define('uipoll.view.main.Main', {
     },{
         xtype: 'panel',
         width: 500,
-        height: 500,
+        height: 900,
         name: 'leaderBoardPanel',
         tpl: new Ext.XTemplate(
             '<table id="leaderboard">',
@@ -50,7 +50,7 @@ Ext.define('uipoll.view.main.Main', {
                 '</tr>',
                 '<tpl foreach=".">',
                     '<tr>',
-                    '<td>{xindex}</th>',
+                    '<td>{rank}</th>',
                     '<td>{name}</th>',
                     '<td>{score}</th>',
                     '</tr>',
